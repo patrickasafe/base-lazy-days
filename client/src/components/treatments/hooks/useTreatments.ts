@@ -18,5 +18,5 @@ export function useTreatments(): Treatment[] {
 
 export const usePrefetchTreatments = (): void => {
   const queryClient = useQueryClient();
-  queryClient.prefetchInfiniteQuery(queryKeys.treatments, getTreatments)
-}
+  queryClient.prefetchQuery(queryKeys.treatments, getTreatments);
+};

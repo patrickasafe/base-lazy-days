@@ -7,6 +7,7 @@ import { Treatment } from './Treatment';
 export function Treatments(): ReactElement {
   // replace with data from React Query
   const treatments = useTreatments();
+  console.log(treatments);
   return (
     <Box>
       <Heading mt={10} align="center">
