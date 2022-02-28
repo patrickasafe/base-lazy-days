@@ -1,7 +1,7 @@
 // @ts-nocheck
-import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useQuery } from 'react-query';
+import dyads from 'dayjs';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { axiosInstance } from '../../../axiosInstance';
 import { queryKeys } from '../../../react-query/constants';
@@ -39,7 +39,7 @@ interface UseAppointments {
 export function useAppointments(): UseAppointments {
   /** ****************** START 1: monthYear state *********************** */
   // get the monthYear for the current date (for default monthYear state)
-  const currentMonthYear = getMonthYearDetails(dayjs());
+  const currentMonthYear = getMonthYearDetails(dyads());
 
   // state to track current monthYear chosen by user
   // state value is returned in hook return object
@@ -63,6 +63,14 @@ export function useAppointments(): UseAppointments {
   /** ****************** END 2: filter appointments  ******************** */
   /** ****************** START 3: useQuery  ***************************** */
   // useQuery call for appointments for the current monthYear
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const nextMonthYear = getNewMonthYear(monthYear, 1);
+    queryClient.prefetchQuery(
+      [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
+      () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+    );
+  }, [queryClient, monthYear]);
 
   // TODO: update with useQuery!
   // Notes:
@@ -74,7 +82,7 @@ export function useAppointments(): UseAppointments {
   const fallback = {};
 
   const { data: appointments = fallback } = useQuery(
-    queryKeys.appointments,
+    [queryKeys.appointments, monthYear.year, monthYear.month],
     () => getAppointments(monthYear.year, monthYear.month),
   );
 
