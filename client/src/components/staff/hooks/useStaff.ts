@@ -28,6 +28,11 @@ export function useStaff(): UseStaff {
   const fallback = [];
   const { data: staff = fallback } = useQuery(queryKeys.staff, getStaff, {
     select: filter !== 'all' ? selectFn : undefined,
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    cacheTime: 1000 * 60 * 15, // 15 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   return { staff, filter, setFilter };
