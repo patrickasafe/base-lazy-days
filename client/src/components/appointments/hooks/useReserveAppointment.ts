@@ -1,5 +1,4 @@
-import { UseMutateFunction, useMutation } from 'react-query';
-import { queryClient } from 'react-query/queryClient';
+import { UseMutateFunction, useMutation, useQueryClient } from 'react-query';
 
 import { Appointment } from '../../../../../shared/types';
 import { axiosInstance } from '../../../axiosInstance';
@@ -27,6 +26,7 @@ export function useReserveAppointment(): UseMutateFunction<
 > {
   const { user } = useUser();
   const toast = useCustomToast();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation(
     (appointment: Appointment) => setAppointmentUser(appointment, user?.id),
